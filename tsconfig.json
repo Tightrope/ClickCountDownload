@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/node18",
+  "display": "NodeJS 18",
+  "compilerOptions": {
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

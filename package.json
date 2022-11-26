@@ -1,0 +1,22 @@
+{
+  "name": "click_count_rollup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node": "18.12.1",
+    "sqlite3": "^5.1.2",
+    "sqlite": "^4.1.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "^1.0.1",
+    "@types/node": "^18.11.9",
+    "ts-node": "^10.4.0"
+  }
+}
