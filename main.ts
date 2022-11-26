@@ -1,8 +1,6 @@
-import {populateDatabase, getClickCountsForRange, createDbConnection, iterateTable} from "./helpers/DatabaseHelper";
+import {populateDatabase, createDbConnection, iterateTable} from "./repository/DatabaseHelper";
 import * as sqlite3 from "sqlite3";
-import path from "path";
 
-const dbFilePath = path.resolve(__dirname, "./data/main.db");
 const dataPath = "./data/test_data.json";
 const rollupTableName = "DailyRollup";
 
@@ -18,14 +16,8 @@ async function getClicks(){
 
 async function main(){
     sqlite3.verbose();
-    let dbConnection= await createDbConnection(dbFilePath);
-    //await populateDatabase(dbConnection.getDatabaseInstance(), dataPath, rollupTableName);
+    let dbConnection= await createDbConnection();
     await populateDatabase(dbConnection, dataPath, rollupTableName);
-    // await dbConnection.close();
-
-    // Note: Need to close/open database to flush changes to disk before querying
-    //dbConnection= await createDbConnection(dbFilePath);
-    // await iterateTable(dbConnection.getDatabaseInstance(), rollupTableName);
     await iterateTable(dbConnection, rollupTableName);
     await dbConnection.close();
 }

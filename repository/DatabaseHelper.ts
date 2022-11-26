@@ -1,23 +1,17 @@
 import * as fs from "fs";
 import {DailyRollup} from "../models/DailyRollup";
-import sqlite3, {Database} from "sqlite3";
-import {open} from "sqlite";
+import {Database} from "sqlite3";
 
-export async function createDbConnection(dbFilePath: string) {
-    console.info(`Creating connection to database at ${dbFilePath}`);
+export async function createDbConnection() {
     return new Database(':memory:', (err) => {
         if (err) {
             console.error(err.message);
         }
         console.log('Connected to the in-memory SQlite database.');
     });
-    // return open({
-    //     filename: dbFilePath,
-    //     driver: sqlite3.Database
-    // });
 }
 
-export async function iterateTable(db: sqlite3.Database, rollupTableName: string): Promise<void> {
+export async function iterateTable(db: Database, rollupTableName: string): Promise<void> {
     console.info(`Iterating over table ${rollupTableName}`);
     const rows = await db.each(`SELECT * FROM '${rollupTableName}'`, (err, row) => {
         if(err){
@@ -28,7 +22,7 @@ export async function iterateTable(db: sqlite3.Database, rollupTableName: string
     });
 }
 
-export async function populateDatabase(db: sqlite3.Database, dataPath: string, tableName: string): Promise<void> {
+export async function populateDatabase(db: Database, dataPath: string, tableName: string): Promise<void> {
     const data = JSON.parse(fs.readFileSync(dataPath, 'utf8')) as DailyRollup[];
 
     // Serially create table and seed sqlite database with JSON data
@@ -44,7 +38,7 @@ export async function populateDatabase(db: sqlite3.Database, dataPath: string, t
     });
 }
 
-export async function getClickCountsForRange(db: sqlite3.Database, tableName: string, startDate: Date, endDate: Date) {
+export async function getClickCountsForRange(db: Database, tableName: string, startDate: Date, endDate: Date) {
     // Select rows for the given date range group by date and product id
     // and sum the clicks for each group
     //return new Promise((resolve, reject) => {
