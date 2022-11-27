@@ -1,5 +1,6 @@
-import {populateDatabase, createDbConnection, iterateTable} from "./repository/DatabaseHelper";
+import {populateDatabase, createDbConnection, iterateTable, getClickCountsForRange} from "./repository/DatabaseHelper";
 import * as sqlite3 from "sqlite3";
+import {DailyRollup} from "./models/DailyRollup";
 
 const dataPath = "./data/test_data.json";
 const rollupTableName = "DailyRollup";
@@ -18,7 +19,15 @@ async function main(){
     sqlite3.verbose();
     let dbConnection= await createDbConnection();
     await populateDatabase(dbConnection, dataPath, rollupTableName);
-    await iterateTable(dbConnection, rollupTableName);
+
+    const startDate = new Date("2022-10-01T00:00:00-05:00");
+    const endDate = new Date("2022-10-02T00:00:00-05:00");
+    const rollups: DailyRollup[] = await getClickCountsForRange(dbConnection, rollupTableName, startDate, endDate);
+    console.debug(`Retrieved ${rollups.length} click counts for range ${startDate.toISOString()} - ${endDate.toISOString()}`);
+    rollups.forEach(rollup => {
+        console.log(`Rollup id: ${rollup.id}, date: ${rollup.date}, productId: ${rollup.productId}, clicks: ${rollup.clicks}`);
+    });
+
     await dbConnection.close();
 }
 
